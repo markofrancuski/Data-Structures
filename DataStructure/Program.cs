@@ -176,8 +176,8 @@ namespace DataStructure
         {
             public class Node
             {
-                public Node NextNode { get; private set; }
-                public T Value { get; private set; }
+                public Node NextNode { get; set; }
+                public T Value { get;  set; }
                 public Node()
                 {
                     NextNode = null;
@@ -188,15 +188,7 @@ namespace DataStructure
                     NextNode = next;
                 }
 
-                public void SetNext(Node next)
-                {
-                    NextNode = next;
-                }
 
-                public void SetValue(T value)
-                {
-                    Value = value;
-                }
 
             }
 
@@ -212,62 +204,42 @@ namespace DataStructure
 
             public void AddFirst(T value)
             {
-                if(First == null)
+
+                if(Count == 0)
                 {
-                    Node currentNode = new Node();
-                    currentNode.SetValue(value);
-                    First = currentNode;
-                    if(Last == null) Last = currentNode;
+                    Node currentNode = new Node(value);
+                    First = Last = currentNode;
                 }
                 else
                 {
-                    Node newFirst = new Node();
-                    newFirst.SetNext(First);
-                    newFirst.SetValue(value);
-
-                    First.SetNext(First.NextNode);
+                    Node newFirst = new Node(value, First);
+                    First.NextNode = newFirst;
                 }
                 Count++;
             }
             public void RemoveFirst()
             {
-                if (First == null) throw new Exception("First Node is null");
                 if (Count <= 0) throw new Exception("List is empty! ");
-
                 if(Count == 1)
                 {
                     Count--;
                     First = Last = null;
                     return;
                 }
-
-                Node newFirst = First;
-                First = newFirst.NextNode;
-                First.SetNext(null);
+                First = First.NextNode;
                 Count--;
             }
 
             public void AddLast(T value)
             {
-                Node newNode = new Node(null, value);
-                if(Last == null)
-                {
-                    Last = newNode;
-                    Last.SetNext(newNode);
-
-                    if (First == null) First = newNode;
-                }
-                else
-                {
-                    Last.SetNext(newNode);
-                    Last = newNode;
-                }
+                Node newNode = new Node(value);
+                if (Count == 0) Last = First = newNode;
+                else Last = Last.NextNode = newNode;
                 Count++;
             }
 
             public void RemoveLast()
             {
-                if (Last == null) throw new Exception("Last Node is null! ");
                 if (Count <= 0) throw new Exception("List is empty! ");
 
                 if(Count == 1)
@@ -276,16 +248,13 @@ namespace DataStructure
                     First = Last = null;
                     return;
                 }
-
                 Node node = First;
-                while(node.NextNode != Last)
+                while(node != Last)
                 {
                     node = node.NextNode;
                 }
-
+                node.NextNode = null;
                 Last = node;
-                Last.SetNext(null);
-
                 Count--;
 
             }
