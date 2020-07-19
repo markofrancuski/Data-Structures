@@ -15,7 +15,7 @@ namespace DataStructure
             var o4 = new object();
             var o5 = new object();
 
-            MyList<object> objects = new MyList<object>(10);
+            MyArrayList<object> objects = new MyArrayList<object>(10);
 
             objects.Add(o1);
             objects.Add(o2);
@@ -24,11 +24,11 @@ namespace DataStructure
             var obj = objects[1];
             objects[2] = o5;
 
-            MyLinkedList<object> myLinkedList = new MyLinkedList<object>();
+            MySingleChainedLinkedList<object> myLinkedList = new MySingleChainedLinkedList<object>();
   
         }
 
-        protected class MyList<T> where T : class
+        protected class MyArrayList<T> where T : class
         {
 
             public int Count { get; private set; } = 0;
@@ -47,7 +47,7 @@ namespace DataStructure
 
                 _array = newArray;
             }
-            public MyList(int size = 0)
+            public MyArrayList(int size = 0)
             {
                 if (size <= 0) throw new ArgumentException("Size must be positive");
 
@@ -138,11 +138,11 @@ namespace DataStructure
             }
 
             // Time complexity is O(n).
-            public MyList<T> GetRange(int startIndex, int count)
+            public MyArrayList<T> GetRange(int startIndex, int count)
             {
                 if (count <= 0 ||  startIndex < 0 || startIndex + count > _array.Length) throw new IndexOutOfRangeException();
 
-                MyList<T> result = new MyList<T>(count);
+                MyArrayList<T> result = new MyArrayList<T>(count);
 
                 for (int i = startIndex; i < startIndex + count; i++)
                 {
@@ -154,9 +154,9 @@ namespace DataStructure
 
 
             // Time complexity is O(2n).
-            public static MyList<T> Merge(MyList<T> l1, MyList<T> l2)
+            public static MyArrayList<T> Merge(MyArrayList<T> l1, MyArrayList<T> l2)
             {
-                MyList<T> result = new MyList<T>(l1.Count + l2.Count);
+                MyArrayList<T> result = new MyArrayList<T>(l1.Count + l2.Count);
 
                 for (int i = 0; i < l1.Count; i++)
                 {
@@ -171,32 +171,24 @@ namespace DataStructure
             }
         }
 
-
-        protected class MyLinkedList<T> where T : class
+        protected class MySingleChainedLinkedList<T> where T : class
         {
-            public class Node
+            public class SingleNode
             {
-                public Node NextNode { get; set; }
+                public SingleNode NextNode { get; set; }
                 public T Value { get;  set; }
-                public Node()
-                {
-                    NextNode = null;
-                }
-                public Node(T value, Node next = null)
+                public SingleNode(T value, SingleNode next = null)
                 {
                     Value = value;
                     NextNode = next;
                 }
-
-
-
             }
 
             public int Count { get; private set; } = 0;
-            public Node First { get; private set; }
-            public Node Last { get; private set; }
+            public SingleNode First { get; private set; }
+            public SingleNode Last { get; private set; }
 
-            public MyLinkedList(Node first = null, Node last = null)
+            public MySingleChainedLinkedList(SingleNode first = null, SingleNode last = null)
             {
                 First = first;
                 Last = last;
@@ -207,16 +199,17 @@ namespace DataStructure
 
                 if(Count == 0)
                 {
-                    Node currentNode = new Node(value);
+                    SingleNode currentNode = new SingleNode(value);
                     First = Last = currentNode;
                 }
                 else
                 {
-                    Node newFirst = new Node(value, First);
+                    SingleNode newFirst = new SingleNode(value, First);
                     First.NextNode = newFirst;
                 }
                 Count++;
             }
+            
             public void RemoveFirst()
             {
                 if (Count <= 0) throw new Exception("List is empty! ");
@@ -232,7 +225,7 @@ namespace DataStructure
 
             public void AddLast(T value)
             {
-                Node newNode = new Node(value);
+                SingleNode newNode = new SingleNode(value);
                 if (Count == 0) Last = First = newNode;
                 else Last = Last.NextNode = newNode;
                 Count++;
@@ -248,7 +241,7 @@ namespace DataStructure
                     First = Last = null;
                     return;
                 }
-                Node node = First;
+                SingleNode node = First;
                 while(node != Last)
                 {
                     node = node.NextNode;
@@ -260,5 +253,49 @@ namespace DataStructure
             }
         }
     
+        protected class MyDoubleChainedLinkedList<T> where T : class
+        {
+            public class DoubleNode
+            {
+                public T Value;
+
+                public DoubleNode Next;
+
+                public DoubleNode Prev;
+
+                public DoubleNode(T value, DoubleNode next = null, DoubleNode prev = null)
+                {
+                    Value = value;
+                    Next = next;
+                    Prev = prev;
+                }
+            }
+
+            public int Count { get; private set; } = 0;
+
+            public DoubleNode First { get; private set; }
+            public DoubleNode Last { get; private set; }
+
+            public void AddFirst(T value)
+            {
+
+            }
+
+            public void AddLast(T value)
+            {
+
+            }
+
+            public void RemoveFirst()
+            {
+
+            }
+
+            public void RemoveLast()
+            {
+
+            }
+
+        }
     }
 }
